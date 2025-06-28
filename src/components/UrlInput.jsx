@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ModelInfo from './ModelInfo'
 
 function UrlInput({ onSubmit }) {
@@ -10,6 +10,33 @@ function UrlInput({ onSubmit }) {
   const [englishVariant, setEnglishVariant] = useState('british')
   const [enableSearch, setEnableSearch] = useState(false)
   const [searchKeywords, setSearchKeywords] = useState('')
+
+  // Load API key from localStorage on component mount
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem('gemini-api-key')
+    if (savedApiKey) {
+      setApiKey(savedApiKey)
+    }
+  }, [])
+
+  // Save API key to localStorage when it changes
+  const handleApiKeyChange = (e) => {
+    const newApiKey = e.target.value
+    setApiKey(newApiKey)
+
+    // Save to localStorage (or remove if empty)
+    if (newApiKey.trim()) {
+      localStorage.setItem('gemini-api-key', newApiKey.trim())
+    } else {
+      localStorage.removeItem('gemini-api-key')
+    }
+  }
+
+  // Clear saved API key
+  const handleClearApiKey = () => {
+    setApiKey('')
+    localStorage.removeItem('gemini-api-key')
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -69,7 +96,7 @@ function UrlInput({ onSubmit }) {
             <strong>You need your own Google Gemini API key</strong>
           </div>
           <p style={{margin: '0 0 8px 0', color: '#555'}}>
-            This app requires a free Google Gemini API key to generate articles. Your API key is processed securely and never stored.
+            This app requires a free Google Gemini API key to generate articles. Your API key is saved locally in your browser for convenience and never sent to our servers.
           </p>
           <p style={{margin: '0', color: '#555'}}>
             <strong>Don't have one?</strong> Get your free API key at{' '}
@@ -88,17 +115,39 @@ function UrlInput({ onSubmit }) {
               🔑 Gemini API Key
               <span className="required">*</span>
             </label>
-            <input
-              type="password"
-              id="apiKey"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter your Gemini API key"
-              className="form-input"
-              required
-            />
+            <div style={{display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
+              <input
+                type="password"
+                id="apiKey"
+                value={apiKey}
+                onChange={handleApiKeyChange}
+                placeholder="Enter your Gemini API key"
+                className="form-input"
+                style={{flex: 1}}
+                required
+              />
+              {apiKey && (
+                <button
+                  type="button"
+                  onClick={handleClearApiKey}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: '#f44336',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    whiteSpace: 'nowrap'
+                  }}
+                  title="Clear saved API key"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
             <small className="form-help">
-              🔒 Your API key is used securely and not stored.
+              🔒 Your API key is saved locally in your browser and never sent to our servers.
               <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{color: '#4285f4', textDecoration: 'underline'}}>
                 Get your free API key here
               </a>
