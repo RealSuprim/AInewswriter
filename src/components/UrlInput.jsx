@@ -3,7 +3,7 @@ import ModelInfo from './ModelInfo'
 
 function UrlInput({ onSubmit }) {
   const [urls, setUrls] = useState('')
-  const [apiKey, setApiKey] = useState('AIzaSyBBnfcVRVDTOQjlMfdmYnNsgcMdXTrmbKI')
+  const [apiKey, setApiKey] = useState('')
   const [articleTitle, setArticleTitle] = useState('')
   const [articleStyle, setArticleStyle] = useState('news')
   const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash')
@@ -56,6 +56,30 @@ function UrlInput({ onSubmit }) {
   return (
     <div className="url-input-container">
       <form onSubmit={handleSubmit} className="url-form">
+        <div className="info-banner" style={{
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #2196f3',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          fontSize: '14px'
+        }}>
+          <div style={{display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
+            <span style={{fontSize: '18px', marginRight: '8px'}}>ℹ️</span>
+            <strong>You need your own Google Gemini API key</strong>
+          </div>
+          <p style={{margin: '0 0 8px 0', color: '#555'}}>
+            This app requires a free Google Gemini API key to generate articles. Your API key is processed securely and never stored.
+          </p>
+          <p style={{margin: '0', color: '#555'}}>
+            <strong>Don't have one?</strong> Get your free API key at{' '}
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+               style={{color: '#2196f3', textDecoration: 'underline'}}>
+              Google AI Studio
+            </a>
+          </p>
+        </div>
+
         <div className="form-section">
           <h2>📝 Article Configuration</h2>
           
@@ -74,7 +98,10 @@ function UrlInput({ onSubmit }) {
               required
             />
             <small className="form-help">
-              Your API key is used securely and not stored
+              🔒 Your API key is used securely and not stored.
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{color: '#4285f4', textDecoration: 'underline'}}>
+                Get your free API key here
+              </a>
             </small>
           </div>
 
